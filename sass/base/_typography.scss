@@ -1,0 +1,64 @@
+@import url("https://fonts.googleapis.com/css2?family=Fleur+De+Leah&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap");
+
+h1 {
+  font-family: "Fleur De Leah", serif;
+}
+
+h2,
+h3,
+h4 {
+  font-family: "Playfair Display", serif;
+}
+
+h1 {
+  font-size: 10rem;
+  line-height: 12rem;
+  font-weight: 400;
+}
+
+h2 {
+  font-size: 8rem;
+}
+
+h3 {
+  font-size: 6rem;
+  line-height: 7rem;
+}
+
+h4 {
+  font-size: 4rem;
+  line-height: 4.7rem;
+}
+
+h5 {
+  font-size: 3rem;
+}
+
+p {
+  font-family: "Roboto", serif;
+  font-size: 1.6rem;
+  line-height: 2rem;
+  font-weight: 400;
+}
+
+a {
+  font-family: "Roboto", serif;
+  font-size: 1.6rem;
+  line-height: 0;
+  font-weight: 500;
+}
+
+button {
+  font-family: "Roboto", serif;
+  font-size: 1.6rem;
+  line-height: 0;
+  font-weight: 500;
+}
+
+.copy {
+  font-size: 1.2rem;
+}
+
+.copy-small {
+  font-size: 15px;
+}
