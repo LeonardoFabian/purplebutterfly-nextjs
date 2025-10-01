@@ -6,8 +6,13 @@ import { BannerHero, H1, SideMenu } from "@/components";
 import { Header } from "@/components/layout/Header";
 import { ProductGrid } from "@/components";
 import { Footer } from "@/components";
-import { getFeaturedProducts } from "@/actions";
+import {
+  getCategories,
+  getFeaturedProducts,
+  getPaginatedProductsWithImages,
+} from "@/actions";
 import type { Metadata } from "next";
+import { ProductsGridCard } from "@/components/products/ProductsGridCard";
 
 export const metadata: Metadata = {
   title: "Purple Butterfly Bouquets | Coffee, Tea & Floral Experiences",
@@ -49,6 +54,7 @@ export default async function Home() {
   };
 
   const { featuredProducts } = await getFeaturedProducts({ take: 5 });
+  const categories = await getCategories();
 
   //    products.forEach( product => product.slug = `product/${product.slug}`);
 
@@ -82,13 +88,31 @@ export default async function Home() {
         />
 
         <div className="container">
-          <div className="latest-products text-center py-12 flex flex-col gap-6">
-            <H1>Featured Bouquets</H1>
+          <section className="featured-products-section text-center py-12 flex flex-col gap-6">
+            <h2 className="font-heading text-4xl font-medium">
+              Featured Bouquets
+            </h2>
             {/* { JSON.stringify( products ) } */}
             <div className="flex flex-col ">
               <ProductGrid products={featuredProducts} />
             </div>
-          </div>
+          </section>
+
+          <section className="products-by-category-section text-center py-12 flex flex-col gap-6">
+            <h2 className="font-heading text-4xl font-medium">
+              Bouquets by Category
+            </h2>
+            {/* { JSON.stringify( products ) } */}
+            <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+              {categories.map((category) => (
+                <ProductsGridCard
+                  key={category.id}
+                  category={category}
+                  products={category.products}
+                />
+              ))}
+            </div>
+          </section>
         </div>
       </main>
 
