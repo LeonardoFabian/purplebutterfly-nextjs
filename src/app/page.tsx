@@ -2,7 +2,7 @@
 export const dynamic = "force-dynamic";
 export const revalidate = 60; // 60 | 0
 
-import { BannerHero, H1, SideMenu } from "@/components";
+import { BannerHero, H1, SideMenu, ProductsGridCard } from "@/components";
 import { Header } from "@/components/layout/Header";
 import { ProductGrid } from "@/components";
 import { Footer } from "@/components";
@@ -12,7 +12,6 @@ import {
   getPaginatedProductsWithImages,
 } from "@/actions";
 import type { Metadata } from "next";
-import { ProductsGridCard } from "@/components/products/ProductsGridCard";
 
 export const metadata: Metadata = {
   title: "Purple Butterfly Bouquets | Coffee, Tea & Floral Experiences",
