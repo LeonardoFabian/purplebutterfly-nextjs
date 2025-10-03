@@ -6,6 +6,8 @@ import type { CartOption, SelectedSize } from "@/lib/pricing";
 import prisma from "@/lib/prisma";
 import { calcDiscountCents, calcTaxCents, currencyFormat, toCents } from "@/utils";
 import { getSettings } from "../settings/get-settings";
+import { sendEmail } from "@/lib/email";
+import { getNewOrderEmailHtml } from "@/lib/templates/emails/new-order-email";
 
 interface ProductsToOrder {
     productId: string;
@@ -31,7 +33,7 @@ export const placeOrder = async (products: ProductsToOrder[], address: Address, 
     const storedProducts = await prisma.product.findMany({
         where: {
             id: {
-                in: products.map( p => p.productId )
+                in: products.map(p => p.productId)
             }
         },
         include: {
@@ -41,16 +43,16 @@ export const placeOrder = async (products: ProductsToOrder[], address: Address, 
                 }
             },
             ProductOptionGroup: {
-                    include: {
-                        group: {
-                            include: {
-                                items: true
-                            }
+                include: {
+                    group: {
+                        include: {
+                            items: true
                         }
                     }
                 }
+            }
         }
-        
+
     });
     // console.log(storedProducts);
 
@@ -74,9 +76,9 @@ export const placeOrder = async (products: ProductsToOrder[], address: Address, 
 
         // search stored options
         const selectedOptions = [];
-        for ( const opt of item.options) {
+        for (const opt of item.options) {
             const optionItem = product.ProductOptionGroup
-                .flatMap(pg => pg.group.items) 
+                .flatMap(pg => pg.group.items)
                 .find(i => i.id === opt.id);
 
             if (optionItem) {
@@ -93,27 +95,27 @@ export const placeOrder = async (products: ProductsToOrder[], address: Address, 
         const discountCents = calcDiscountCents(Number(product.price), Number(product?.discountPercentage)); // 485       
         const unitPriceCents = basePriceCents + sizeExtraPriceCents + optionsExtraPriceCents - discountCents;
 
-        return total + (unitPriceCents * productQty);       
-        
+        return total + (unitPriceCents * productQty);
+
     }, 0);
 
     // shipping info
-        const shippingInput = {
-            flatCents: settings?.shippingFlatCents ?? 0,
-            freeOverCents: settings?.shippingFreeOverCents ?? 7500,
-            // perGramCents: settings?. ?? 0
-        }
-        const shipping = subTotal >= shippingInput.freeOverCents ? 0 : shippingInput.flatCents; 
-        
-        // sales taxes info
-        const taxInput = {
-            rate: settings?.salesTaxRate ?? 0.1, // 0.1 (10%)
-            taxesApplyToShipping: settings?.salesTaxesApplyToShipping ?? false
-        };
-        const taxBase = subTotal + (taxInput.taxesApplyToShipping ? shipping : 0);
-        const tax = Math.round(taxBase * taxInput.rate);
+    const shippingInput = {
+        flatCents: settings?.shippingFlatCents ?? 0,
+        freeOverCents: settings?.shippingFreeOverCents ?? 7500,
+        // perGramCents: settings?. ?? 0
+    }
+    const shipping = subTotal >= shippingInput.freeOverCents ? 0 : shippingInput.flatCents;
 
-        const totalAmount = subTotal + shipping + tax;
+    // sales taxes info
+    const taxInput = {
+        rate: settings?.salesTaxRate ?? 0.1, // 0.1 (10%)
+        taxesApplyToShipping: settings?.salesTaxesApplyToShipping ?? false
+    };
+    const taxBase = subTotal + (taxInput.taxesApplyToShipping ? shipping : 0);
+    const tax = Math.round(taxBase * taxInput.rate);
+
+    const totalAmount = subTotal + shipping + tax;
 
     // console.log({ totalAmount, subTotal, tax, shipping });
 
@@ -192,7 +194,7 @@ export const placeOrder = async (products: ProductsToOrder[], address: Address, 
             //             }
             //         }
             //     }
-                
+
             //     // if the product is not PREMADE or MAKE_TO_ORDER, return null
             //     return null;
             // });
@@ -229,7 +231,7 @@ export const placeOrder = async (products: ProductsToOrder[], address: Address, 
                     }
                 }
 
-               // MAKE_TO_ORDER: descuenta stock de accesorios según opciones
+                // MAKE_TO_ORDER: descuenta stock de accesorios según opciones
                 if (product.fulfillmentMode === "MAKE_TO_ORDER") {
                     // Acumula los accesorios actualizados
                     const updatedAccessories = [];
@@ -267,7 +269,7 @@ export const placeOrder = async (products: ProductsToOrder[], address: Address, 
                 return null;
             });
 
-            const updatedProducts = await Promise.all( updatedProductsPromises );
+            const updatedProducts = await Promise.all(updatedProductsPromises);
 
             // verify negative stock values
             // updatedProducts.forEach(product => {
@@ -304,15 +306,15 @@ export const placeOrder = async (products: ProductsToOrder[], address: Address, 
                                 const selectedOptions = [];
                                 for (const opt of p.options) {
                                     const optionItem = product.ProductOptionGroup
-                                    .flatMap(pg => pg.group.items)
-                                    .find(i => i.id === opt.id);
+                                        .flatMap(pg => pg.group.items)
+                                        .find(i => i.id === opt.id);
 
                                     if (optionItem) {
-                                    selectedOptions.push({
-                                        id: optionItem.id,
-                                        name: optionItem.name,
-                                        extraPrice: optionItem.extraPrice ? toCents(Number(optionItem.extraPrice)) : 0
-                                    });
+                                        selectedOptions.push({
+                                            id: optionItem.id,
+                                            name: optionItem.name,
+                                            extraPrice: optionItem.extraPrice ? toCents(Number(optionItem.extraPrice)) : 0
+                                        });
                                     }
                                 }
                                 const optionsExtraPriceCents = selectedOptions.reduce((total, option) => total + option.extraPrice, 0);
@@ -331,13 +333,13 @@ export const placeOrder = async (products: ProductsToOrder[], address: Address, 
                                     optionsExtraPrice: (optionsExtraPriceCents / 100).toString(),
                                     options: JSON.stringify(selectedOptions),
                                     productId: p.productId
-                                    
+
                                 })
                             })
                         }
                     }
 
-                    
+
 
                 }
             });
@@ -367,6 +369,27 @@ export const placeOrder = async (products: ProductsToOrder[], address: Address, 
                 });
             }
 
+            // Notify admin by email
+            // TODO: send email to admin
+
+            const emailHtml = getNewOrderEmailHtml({
+                    userId,
+                    orderId: order.id,
+                    totalAmount: order.totalAmount.toString(),
+                    itemsInOrder: itemsInOrder.toString(),
+                    date: new Date().toLocaleString()
+                });
+
+            const isEmailSent = await sendEmail({
+                to: process.env.ADMIN_EMAIL!,
+                subject: `New order #${order.id} placed`,
+                html: emailHtml
+            });
+
+            if (isEmailSent) {
+                console.log(`Email sent to ${process.env.ADMIN_EMAIL}`);
+            }
+
             return {
                 order: order,
                 orderAddress: orderAddress,
@@ -380,14 +403,14 @@ export const placeOrder = async (products: ProductsToOrder[], address: Address, 
             order: prismaTx.order,
             prismaTx: prismaTx,
         }
-        
-    } catch (error:any) {
+
+    } catch (error: any) {
         return {
             ok: false,
             message: error?.message
         }
     }
 
-    
+
 };
 

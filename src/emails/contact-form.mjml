@@ -1,0 +1,78 @@
+<mjml>
+  <mj-head>
+    <mj-title>New Contact Message</mj-title>
+    <mj-preview>You have received a new message from the contact form</mj-preview>
+    <mj-style inline="inline">
+      .label {
+        font-weight: bold;
+        color: #333;
+      }
+    </mj-style>
+  </mj-head>
+
+  <mj-body background-color="#f6e2a6">
+
+    <!-- TOP SPACING -->
+    <mj-section padding="30px 0">
+      <mj-column>
+        <!-- Top space -->
+      </mj-column>
+    </mj-section>
+
+    <!-- MAIN CONTENT -->
+    <mj-section background-color="#ffffff" padding="20px" >
+      <mj-column>
+
+        <mj-image width="200px" src="https://purplebutterflybouquets.com/logo.svg" alt="Raíces Del Alma" />
+        
+        <mj-text font-size="20px" font-weight="bold" color="#333333" align="center">
+          📩 New Contact Message
+        </mj-text>
+
+        <mj-divider border-color="#cccccc" />
+
+        <mj-text font-size="16px" color="#555555">
+          <span class="label">Name:</span> {{name}}<br />
+          <span class="label">Email:</span> {{email}}<br />
+          <span class="label">Phone:</span> {{phone}}<br />
+          <span class="label">Date:</span> {{date}}<br /><br />
+          
+          <span class="label">Message:</span><br />
+          {{message}}
+        </mj-text>
+
+        <mj-button background-color="#7b2d87" color="#ffffff" href="mailto:{{email}}" font-size="16px">
+          Reply to Customer
+        </mj-button>
+
+      </mj-column>
+    </mj-section>
+
+    <!-- FOOTER -->
+    <mj-section background-color="#fafafa" padding="30px 20px">
+      <mj-column width="100%">
+        <mj-text font-size="14px" color="#666666" align="center">
+          <strong>Purple Butterfly Bouquets</strong><br />
+          Milford, DE<br />
+          purplebutterflybouquets@gmail.com | +1 302 682 5779
+        </mj-text>
+
+       <mj-social font-size="14px" icon-size="20px" mode="horizontal" align="center">
+          <mj-social-element name="facebook" href="https://facebook.com/purplebutterflyde" />
+          <mj-social-element name="instagram" href="https://instagram.com/purplebutterflyde" />
+          <mj-social-element name="twitter" href="https://twitter.com/purplebutterflyde" />
+        </mj-social>
+
+       
+      </mj-column>
+    </mj-section>
+
+    <!-- BOTTOM SPACING -->
+    <mj-section padding="20px 0">
+      <mj-column>
+        <!-- Bottom space -->
+      </mj-column>
+    </mj-section>
+
+  </mj-body>
+</mjml>
