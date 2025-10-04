@@ -79,8 +79,8 @@ export default async function Home() {
       />
       <SideMenu />
 
-      <main className="flex min-h-screen flex-col items-center justify-between ">
-        <PageTransition>
+      <main>
+        <PageTransition className="flex min-h-screen flex-col items-center justify-between ">
           <BannerHero
             title="Coffee Bouquets that speak your heart"
             subtitle="A unique gift experience that combines the aroma of premium coffee with the elegance of floral presentation. Perfect for any occasion."
