@@ -12,6 +12,7 @@ import {
   getPaginatedProductsWithImages,
 } from "@/actions";
 import type { Metadata } from "next";
+import PageTransition from "@/components/layout/animations/motion/PageTransition";
 
 export const metadata: Metadata = {
   title: "Purple Butterfly Bouquets | Coffee, Tea & Floral Experiences",
@@ -79,40 +80,42 @@ export default async function Home() {
       <SideMenu />
 
       <main className="flex min-h-screen flex-col items-center justify-between ">
-        <BannerHero
-          title="Coffee Bouquets that speak your heart"
-          subtitle="A unique gift experience that combines the aroma of premium coffee with the elegance of floral presentation. Perfect for any occasion."
-          ctaPath="/shop"
-          ctaText="Shop Now"
-        />
+        <PageTransition>
+          <BannerHero
+            title="Coffee Bouquets that speak your heart"
+            subtitle="A unique gift experience that combines the aroma of premium coffee with the elegance of floral presentation. Perfect for any occasion."
+            ctaPath="/shop"
+            ctaText="Shop Now"
+          />
 
-        <div className="container">
-          <section className="featured-products-section text-center py-12 flex flex-col gap-6">
-            <h2 className="font-heading text-4xl font-medium">
-              Featured Bouquets
-            </h2>
-            {/* { JSON.stringify( products ) } */}
-            <div className="flex flex-col ">
-              <ProductGrid products={featuredProducts} />
-            </div>
-          </section>
+          <div className="container">
+            <section className="featured-products-section text-center py-12 flex flex-col gap-6">
+              <h2 className="font-heading text-4xl font-medium">
+                Featured Bouquets
+              </h2>
+              {/* { JSON.stringify( products ) } */}
+              <div className="flex flex-col ">
+                <ProductGrid products={featuredProducts} />
+              </div>
+            </section>
 
-          <section className="products-by-category-section text-center py-12 flex flex-col gap-6">
-            <h2 className="font-heading text-4xl font-medium">
-              Bouquets by Category
-            </h2>
-            {/* { JSON.stringify( products ) } */}
-            <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-              {categories.map((category) => (
-                <ProductsGridCard
-                  key={category.id}
-                  category={category}
-                  products={category.products}
-                />
-              ))}
-            </div>
-          </section>
-        </div>
+            <section className="products-by-category-section text-center py-12 flex flex-col gap-6">
+              <h2 className="font-heading text-4xl font-medium">
+                Bouquets by Category
+              </h2>
+              {/* { JSON.stringify( products ) } */}
+              <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                {categories.map((category) => (
+                  <ProductsGridCard
+                    key={category.id}
+                    category={category}
+                    products={category.products}
+                  />
+                ))}
+              </div>
+            </section>
+          </div>
+        </PageTransition>
       </main>
 
       <Footer />
